@@ -15,6 +15,14 @@ import static com.codeborne.selenide.Selenide.$;
 public class CardDeliveryOrderDateSelectionByCalendarTest {
     private LocalDate deliveryDate;
 
+    public String formatDate(int days) {
+        deliveryDate = LocalDate.now().plusDays(days);
+        long seconds = deliveryDate.atStartOfDay().toInstant(ZoneOffset.ofHours(3)).getEpochSecond();
+        long millis = seconds * 1000;
+        String value = Long.toString(millis);
+        return value;
+    }
+
     @BeforeEach
     void setup() {
         open("http://localhost:9999/");
@@ -22,25 +30,19 @@ public class CardDeliveryOrderDateSelectionByCalendarTest {
 
     @Test
     void shouldTestSelectionByCalendar() {
-        deliveryDate = LocalDate.now().plusDays(7);
-        long seconds = deliveryDate.atStartOfDay().toInstant(ZoneOffset.ofHours(3)).getEpochSecond();
-        long millis = seconds * 1000;
-        String value = Long.toString(millis);
-
-        System.out.println(value);
-
         $("[data-test-id=city] input").setValue("Нижний Новгород");
         $("[data-test-id=date] button").click();
 
         SelenideElement dataDay = $("tbody");
         ElementsCollection returnDate = dataDay.$$("[data-day]");
+        ElementsCollection neededDay = returnDate.filter(attribute("data-day", formatDate(7)));
 
-        for (SelenideElement e : returnDate) {
-            if (e.has(attribute("data-day", value))) {
-                e.click();
-            }
+        while (neededDay.isEmpty()){
+            $("[data-step='1']").click();
+            returnDate = dataDay.$$("[data-day]");
+            neededDay = returnDate.filter(attribute("data-day", formatDate(7)));
         }
-//        $(".calendar__arrow_direction_right").click();
+        neededDay.get(0).click();
 
         $("[data-test-id=name] input").setValue("Круглова Дарья");
         $("[data-test-id=phone] input").setValue("+79000000000");

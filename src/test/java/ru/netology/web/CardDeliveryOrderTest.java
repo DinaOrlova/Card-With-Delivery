@@ -14,6 +14,14 @@ public class CardDeliveryOrderTest {
     private LocalDate deliveryDate;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
+    public void selectDatePlusDaysFromCurrent(int days) {
+        deliveryDate = LocalDate.now().plusDays(days);
+        String formatDate = deliveryDate.format(formatter);
+        $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.CONTROL,"A"));
+        $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.DELETE));
+        $("[data-test-id=date] input").setValue(formatDate);
+    }
+
     @BeforeEach
     void setup() {
         open("http://localhost:9999/");
@@ -21,12 +29,8 @@ public class CardDeliveryOrderTest {
 
     @Test
     void shouldTestSingleNameAndSurnameCurrentDayPlusThreeDays() {
-        deliveryDate = LocalDate.now().plusDays(3);
-        String formatDate = deliveryDate.format(formatter);
         $("[data-test-id=city] input").setValue("Нижний Новгород");
-        $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.CONTROL,"A"));
-        $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.DELETE));
-        $("[data-test-id=date] input").setValue(formatDate);
+        selectDatePlusDaysFromCurrent(3);
         $("[data-test-id=name] input").setValue("Круглова Дарья");
         $("[data-test-id=phone] input").setValue("+79000000000");
         $("[data-test-id=agreement]").click();
@@ -36,12 +40,8 @@ public class CardDeliveryOrderTest {
 
     @Test
     void shouldTestSingleNameDoubleSurnameCurrentDayPlusSevenDays() {
-        deliveryDate = LocalDate.now().plusDays(7);
-        String formatDate = deliveryDate.format(formatter);
         $("[data-test-id=city] input").setValue("Казань");
-        $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.CONTROL,"A"));
-        $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.DELETE));
-        $("[data-test-id=date] input").setValue(formatDate);
+        selectDatePlusDaysFromCurrent(7);
         $("[data-test-id=name] input").setValue("Круглова-Серова Дарья");
         $("[data-test-id=phone] input").setValue("+79000000000");
         $("[data-test-id=agreement]").click();
@@ -51,12 +51,8 @@ public class CardDeliveryOrderTest {
 
     @Test
     void shouldTestDoubleNameSingleSurnameCurrentDayPlusTenDays() {
-        deliveryDate = LocalDate.now().plusDays(10);
-        String formatDate = deliveryDate.format(formatter);
         $("[data-test-id=city] input").setValue("Санкт-Петербург");
-        $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.CONTROL,"A"));
-        $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.DELETE));
-        $("[data-test-id=date] input").setValue(formatDate);
+        selectDatePlusDaysFromCurrent(10);
         $("[data-test-id=name] input").setValue("Круглова Мария-Виктория");
         $("[data-test-id=phone] input").setValue("+79000000000");
         $("[data-test-id=agreement]").click();
@@ -66,12 +62,8 @@ public class CardDeliveryOrderTest {
 
     @Test
     void shouldTestDoubleNameAndSurnameCurrentDayPlus33Days() {
-        deliveryDate = LocalDate.now().plusDays(33);
-        String formatDate = deliveryDate.format(formatter);
         $("[data-test-id=city] input").setValue("Барнаул");
-        $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.CONTROL,"A"));
-        $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.DELETE));
-        $("[data-test-id=date] input").setValue(formatDate);
+        selectDatePlusDaysFromCurrent(33);
         $("[data-test-id=name] input").setValue("Круглова-Серова Мария-Виктория");
         $("[data-test-id=phone] input").setValue("+79000000000");
         $("[data-test-id=agreement]").click();
